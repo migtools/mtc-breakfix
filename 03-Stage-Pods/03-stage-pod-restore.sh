@@ -1,6 +1,6 @@
 #!/bin/bash
 
-img=$(cat .current_image)
+img=$(cat current_image)
 
 echo "$img"
 
@@ -9,3 +9,4 @@ oc patch configmap/migration-cluster-config \
   --type merge \
   -p '{ "data": { "STAGE_IMAGE": "'$img'" } }'
 
+rm current_image

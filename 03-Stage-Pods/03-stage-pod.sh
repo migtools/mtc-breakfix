@@ -2,7 +2,7 @@
 
 current_image=$(oc get configmap migration-cluster-config -o go-template --template="{{ .data.STAGE_IMAGE }}{{ println }}")
 
-echo "$current_image" >> .current_image
+echo "$current_image" >> current_image
 
 oc patch configmap/migration-cluster-config \
   -n openshift-migration \

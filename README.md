@@ -5,8 +5,8 @@ This is a set of exercises that navigate users through different failure scenari
 Each exercise has its own directory. Follow the README in each directory to perform the exercises in your clusters.
 
 
-## (./01-Misconfiguration/)[Exercise 1: Misconfiguration]
+* [Exercise 1: Misconfiguration](./01-Misconfiguration/)
 
-## (./02-Gvk/)[Exercise 2: GVK Incompatibility]
+* [Exercise 2: GVK Incompatibility](./02-Gvk/)
 
-## (./03-Stage-Pods/)[Exercise 3: Stage Pod Failure]
+* [Exercise 3: Stage Pods Failure](./03-Stage-Pods/)
