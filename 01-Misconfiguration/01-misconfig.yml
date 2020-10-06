@@ -37,8 +37,10 @@ metadata:
   name: s3-repository
   namespace: openshift-migration
 spec:
+spec:
   backupStorageConfig:
     awsBucketName: non-existing-bucket
+    awsS3Url: http://misconfigured-endpoint.com
     credsSecretRef:
       name: s3-repository
       namespace: openshift-config

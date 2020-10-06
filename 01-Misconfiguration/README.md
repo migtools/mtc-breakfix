@@ -56,7 +56,7 @@ The Cluster resource now should show `Connected` in the _Status_ field:
 
 This section assumes that the users have already created an object storage bucket to use as MTC Replication Repository on their destination cluster. The lab environment already has Minio installed. The users can use it as backing store for their replication repository. To create a new bucket in Minio, please follow the following documentation:
 
-![Object-Storage-Setup](https://github.com/konveyor/mig-agnosticd/blob/master/demos/2020_Summit/labs/2.md#26-object-storage-setup)
+[Object-Storage-Setup](https://github.com/konveyor/mig-agnosticd/blob/master/demos/2020_Summit/labs/2.md#26-object-storage-setup)
 
 Once set up, navigate to _Replication Repositories_ tab in the MTC UI. You should find the repository named `s3-repository` which we created in the first step:
 
