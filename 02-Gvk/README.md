@@ -112,6 +112,8 @@ Download the `restore-<restore_name>-results.gz` archive. Extract the archive to
 {"errors":{"namespaces":{"gvk-demo":["error restoring gvkdemoes.konveyor.openshift.io/gvk-demo/gvk-demo: the server could not find the requested resource"]}}}
 ```
 
-From the error message above, it is clear that the 
+From the error message above, it is clear that Velero failed to restore the Custom Resource `gvkdemoes.konveyor.openshift.io` we created. 
+
+
 
 
