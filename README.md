@@ -7,6 +7,6 @@ Each exercise has its own directory. Follow the README in each directory to perf
 
 * [Exercise 1: Misconfiguration](./01-Misconfiguration/)
 
-* [Exercise 2: GVK Incompatibility](./02-Gvk/)
+* [Exercise 2: Stage Pods Failure](./02-Stage-Pods/)
 
-* [Exercise 3: Stage Pods Failure](./03-Stage-Pods/)
+* [Exercise 3: GVK Incompatibility](./03-Gvk/)
