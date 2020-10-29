@@ -1,4 +1,4 @@
-# Exercise 2 : GVK Incompatibility
+# Exercise 3 : GVK Incompatibility
 
 This exercise guides users through a failed migration scenario due to incompatible GVKs between the source and the destination cluster. It helps users identify the problem on their own by investigating different migration resources.
 
@@ -9,7 +9,7 @@ To perform this exercise, we will install a new Custom Resource Definition on th
 Login to your source cluster and deploy the Custom Resource Definition and an instance of the Custom Resource:
 
 ```sh
-oc apply -f 02-source-manifest.yaml
+oc apply -f 03-source-manifest.yaml
 ```
 
 This will create a namespace `gvk-demo` on your source cluster and deploy an instance of Custom Resource in it.
@@ -17,7 +17,7 @@ This will create a namespace `gvk-demo` on your source cluster and deploy an ins
 Login to your destination cluster and deploy the Custom Resource Definition:
 
 ```sh
-oc apply -f 02-dest-manifest.yaml
+oc apply -f 03-dest-manifest.yaml
 ```
 
 
