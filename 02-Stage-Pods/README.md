@@ -1,4 +1,4 @@
-# Exercise 3 : Stage Pod Failures
+# Exercise 2 : Stage Pod Failures
 
 When filesystem copy mode is selected, MTC makes use of temporary pods which attach the PVs and trigger a filesystem copy through Restic. In this exercise, we will trigger a failure in the Stage Pods and try to fix the issue manually.
 
@@ -9,7 +9,7 @@ MTC uses `migration-cluster-config` configmap to allow users to modify image use
 Login to your source cluster and edit the configmap using:
 
 ```sh
-./03-stage-pod.sh
+./02-stage-pod.sh
 ```
 
 Wait until the operator recreates a new configmap:
@@ -60,7 +60,7 @@ We will now use the `Cancel` migration feature to cancel the ongoing migration. 
 Restore the stage pod image using: 
 
 ```sh
-./03-stage-pod-restore.sh
+./02-stage-pod-restore.sh
 ```
 
 ### Retry migration
