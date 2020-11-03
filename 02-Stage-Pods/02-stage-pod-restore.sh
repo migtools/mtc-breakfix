@@ -4,9 +4,9 @@ img=$(cat current_image)
 
 echo "$img"
 
-oc patch configmap/migration-cluster-config \
+oc patch migrationcontroller/migration-controller \
   -n openshift-migration \
   --type merge \
-  -p '{ "data": { "STAGE_IMAGE": "'$img'" } }'
+  -p '{ "spec": {"migration_stage_image_fqin": "'$img'" }}'
 
 rm current_image
