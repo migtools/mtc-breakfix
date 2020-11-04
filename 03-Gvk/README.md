@@ -6,10 +6,23 @@ This exercise guides users through a failed migration scenario due to incompatib
 
 To perform this exercise, we will install a new Custom Resource Definition on the source and the destination cluster. The version of the CRD on the destination cluster will be different from that of the source cluster. 
 
-Login to your source cluster and deploy the Custom Resource Definition and an instance of the Custom Resource:
+Login to your source cluster and deploy the Custom Resource Definition:
 
 ```sh
-oc apply -f 03-source-manifest.yaml
+oc apply -f 03-source-crd.yml
+```
+
+Wait until the CRD is created on the source cluster. You can confirm whether the CRD is created by running:
+
+```sh
+oc get crd gvkdemoes.konveyor.openshift.io
+```
+
+Create the namespace and an instance of the CRD on the source cluster:
+
+```sh
+oc apply -f 03-source-ns.yml
+oc apply -f 03-source-cr.yml
 ```
 
 This will create a namespace `gvk-demo` on your source cluster and deploy an instance of Custom Resource in it.
@@ -17,7 +30,7 @@ This will create a namespace `gvk-demo` on your source cluster and deploy an ins
 Login to your destination cluster and deploy the Custom Resource Definition:
 
 ```sh
-oc apply -f 03-dest-manifest.yaml
+oc apply -f 03-dest-manifest.yml
 ```
 
 

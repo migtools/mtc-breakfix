@@ -18,16 +18,4 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: gvk-demo
----
-apiVersion: konveyor.openshift.io/v1alpha1
-kind: GvkDemo
-metadata:
-  name: gvk-demo
-  namespace: gvk-demo
-spec: {}
 
