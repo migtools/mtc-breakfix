@@ -42,76 +42,70 @@ On your destination cluster, create a new MigPlan to migrate namespace `gvk-demo
 
 Run a migration by clicking _Migrate_ option from the dropdown menu on the migplan.
 
-The migration will fail at _FinalRestoreCreated_ phase:
+The migration will complete with message `Completed with warnings`:
 
-![MigMigration-Failed](./images/migmigration-failed.png)
+![MigMigration: Completed with warnings](./images/migration-details-page.png)
 
+The Warning message indicates that the migration went to completion, however, one of the steps in the migration failed. Navigate to the details page of the migration by clicking on the link under the `Type` column:
+
+![MigMigration: Details page](./images/pipeline-view.png)
+
+As shown in the details page above, `Restore` step in migration failed. This step is responsible for restoring Kubernetes objects in the target cluster.
 ## Investigate
 
-For each migration, MTC creates a _MigMigration_ Custom Resource. We will investigate the resource to find out the cause of the issue. 
+MTC UI displays a _Debug View_ to list Kubernetes resources created during a migration. It is updated dynamically as and when the new resources are created or when there are updates to the existing resources. It can be found on the migration details page at the bottom of the page:
 
-Login to the destination cluster and find the _MigMigration_ resource associated with the _MigPlan_ you created:
+![MigMigration: Debug View](./images/debug-view.png)
 
-```sh
-oc get migmigration -n openshift-migration -l migration.openshift.io/migplan-name=<migplan_name>
-```
+Find the Restore that appears to have problems and click on the dropdown menu: 
 
-Replace `<migplan_name>` with the name of _MigPlan_ you created.
+![Debug View: Restore](./images/debug-view-clicked.png)
 
-```sh
-[pranav@dragonfly mig-controller]$ oc get migmigration -n openshift-migration -l migration.openshift.io/migplan-name=migplan
-NAME                                   READY   PLAN      STAGE   ITINERARY   PHASE       AGE
-218bcb80-0cd1-11eb-bd4f-875ce826b7be           migplan   false   Failed      Completed   35m
-```
-
-Copy the name of the _MigMigration_ and run `oc get` to read the yaml definition:
+Click `copy oc describe command` link. It will copy the `oc` command to the clipboard. Login to the destination cluster and run the command:
 
 ```sh
-[pranav@dragonfly mig-controller]$ oc get migmigration -n openshift-migration 218bcb80-0cd1-11eb-bd4f-875ce826b7be -o yaml
-apiVersion: migration.openshift.io/v1alpha1
-kind: MigMigration
-metadata:
-  annotations:
-    openshift.io/touch: 8fd15f40-0cd1-11eb-929a-0a580a83002f
-  creationTimestamp: "2020-10-12T21:23:11Z"
-  generation: 27
-  labels:
-    migration.openshift.io/migplan-name: migplan
-  name: 218bcb80-0cd1-11eb-bd4f-875ce826b7be
-  namespace: openshift-migration
-  ownerReferences:
-  - apiVersion: migration.openshift.io/v1alpha1
-    kind: MigPlan
-    name: migplan
-    uid: 3b811cb7-d2df-407f-a268-c8af308961aa
-  resourceVersion: "1957021"
-  selfLink: /apis/migration.openshift.io/v1alpha1/namespaces/openshift-migration/migmigrations/218bcb80-0cd1-11eb-bd4f-875ce826b7be
-  uid: 194c16d2-5216-4b49-a75b-f0b0a41f0a61
-spec:
-  migPlanRef:
-    name: migplan
-    namespace: openshift-migration
-  stage: false
-status:
-  conditions:
-  - category: Advisory
-    durable: true
-    lastTransitionTime: "2020-10-12T21:26:13Z"
-    message: 'The migration has failed.  See: Errors.'
-    reason: FinalRestoreCreated
-    status: "True"
-    type: Failed
-  errors:
-  - 'Restore: openshift-migration/218bcb80-0cd1-11eb-bd4f-875ce826b7be-nxpkb partially
-    failed.'
-  itinerary: Failed
-  observedDigest: 9834d071975562d5e2c2eb855bca6950711ded8a0e45af5307fa56cd0f5ba3c7
-  phase: Completed
-  startTimestamp: "2020-10-12T21:23:12Z"
+[nobody@dragonfly ~]$ oc describe restore --namespace openshift-migration migration-d123c-final-nl22t
+Name:         migration-d123c-final-nl22t
+Namespace:    openshift-migration
+Labels:       app.kubernetes.io/part-of=openshift-migration
+              migmigration=4993595a-995f-45df-9d4e-80161a716dc9
+              migration-final-restore=4993595a-995f-45df-9d4e-80161a716dc9
+              migration.openshift.io/migmigration-name=migration-d123c
+              migration.openshift.io/migplan-name=gvkdemo-00
+              migration.openshift.io/migrated-by-migmigration=4993595a-995f-45df-9d4e-80161a716dc9
+              migration.openshift.io/migrated-by-migplan=e0d4b8d6-3ddc-4ff2-8c41-3f15bbb98d56
+Annotations:  migration.openshift.io/migmigration-type: final
+API Version:  velero.io/v1
+Kind:         Restore
+Metadata:
+  Creation Timestamp:  2021-09-16T15:58:01Z
+  Generate Name:       migration-d123c-final-
+  Generation:          6
+  Resource Version:  4208804
+Spec:
+  Backup Name:  migration-d123c-initial-82jpq
+  Excluded Resources:
+    nodes
+    events
+    events.events.k8s.io
+    backups.velero.io
+    restores.velero.io
+    resticrepositories.velero.io
+  Hooks:
+  Restore P Vs:  true
+Status:
+  Completion Timestamp:  2021-09-16T15:58:05Z
+  Errors:                1
+  Phase:                 PartiallyFailed
+  Progress:
+    Items Restored:  23
+    Total Items:     23
+  Start Timestamp:   2021-09-16T15:58:01Z
+  Warnings:          7
+Events:              <none>
 ```
 
-Examine the `status` in the yaml output of _MigMigration_. In the above case, the error message indicates that the Velero Restore `218bcb80-0cd1-11eb-bd4f-875ce826b7be-nxpkb` partially failed. 
-
+By inspecting the `Status` field of the resource above we can see that the restore `PartiallyFailed`.
 
 We will now locate the tarball associated with this restore in the _Replication Repository_ and download the archive. 
 
